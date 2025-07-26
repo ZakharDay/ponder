@@ -75,7 +75,11 @@ const getUrl = (
   query?: QueryWithTypings,
 ) => {
   const url = new URL(baseUrl);
-  url.pathname = `${url.pathname}/${method}`;
+  if (url.pathname == '/') {
+    url.pathname = method;
+  } else {
+    url.pathname = `${url.pathname}/${method}`;
+  }
   if (query) {
     url.searchParams.set("sql", superjson.stringify(query));
   }
@@ -167,9 +171,7 @@ export const createClient = <schema extends Schema>(
       };
     },
     getStatus: async () => {
-      const response = await fetch(getUrl(baseUrl, "status"), {
-        method: "POST",
-      });
+      const response = await fetch(getUrl(baseUrl, "status"));
 
       return response.json();
     },
